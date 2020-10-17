@@ -1,4 +1,4 @@
-storage = {'Ola':'Horlar2002.24,s', 'Khalid':'Ola2002.24,s'}
+storage = {}
 
 
 def usernameChecker(username):
