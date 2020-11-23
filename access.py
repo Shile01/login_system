@@ -1,111 +1,143 @@
+import re as regex
 storage = {}
 
 
 def usernameChecker(username):
-    alpha = ('q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m')
-    for i in alpha:
-        i = i.upper()
-        if i in username:
-            return True
+    # contains uppercase
+    pattern = regex.compile('^[A-Z]*$')
+    if regex.search(pattern, username):
+        return True
     else:
-        return 'true'
+        return False
 
 
 def passwordChecker(password):
-    alpha = ('q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m')
-    numbers = (1,2,3,4,5,6,7,8,9,0)
-    characters = ("!","@",'#','$','%','^','&','*','(',')','-','_','+','=',',',':','/','>','<','?','.'," \ ", "|", '£', '~', ';')
-    if len(password) >= 8:
-        for i in alpha:
-            i = i.upper()
-        for number in numbers:
-            number = str(number)
-        for character in characters:
-            if alpha and number and character in password:
-                return True
+    # contains uppercase
+    # contains lowercase
+    # contains numeric
+    # contains special character
+    pattern = regex.compile('[A-Za-z0-9@#$%^&+=]{8,}')
+    if regex.search(pattern, password):
+      return True
     else:
-        return 'true'
-
-
-while True:
-    prompt = input('Enter Your option here: ').lower()
-    prompt = prompt.strip()
-    # to sign up
-    if prompt == 'sign up':
-        username = input('Enter username: ')
-        x = usernameChecker(username)
-        password = input('Enter password: ')
-        y = passwordChecker(password)
-        if x == True and y == True:
-            for key in storage:
-                # print(key)
-                # check if username exists
-                if username in key:
-                    print('Username Exist')
-                    break
-            # if all requirements fine, map password to its username
-            else:
-                storage[username] = password
-                print('Information saved!')
-        # if one or more requirements failed;
-        else:
-            if x == 'true' and y == True:
-                print('Username doesn\'t meet the requirement.')
-            elif x == True and y == 'true':
-                print('Password doesn\'t meet up with the requirements.')
-            elif x == 'true' and y == 'true':
-                print('Username and Password didn\'t meet up with the requirements.')
-            # print(storage)
-
-        restart = input('Enter y to continue or n to quit(y/n): ').lower()
-        restart = restart.strip()
-        if restart == 'y':
-            continue
-        elif restart == 'n':
-            quit()
-        else:
-            print('I do not understand')
+      return False
     
-    # for logging in         
-    elif prompt == 'login':
-        username = input('Enter username: ')
-        password = input('Enter password: ')
-        # check if username and password exists
-        for key, value in storage.items():
-            if username in key and password in value: 
-                print("Access Granted")
-                quit()
-        # if username or password doesn't exist
-        else:
-            if username in key and storage[username] != password:
-                print('Password Incorrect')
-            elif username not in key and password in value:
-                print('Username Incorrect')
-            elif username not in key and password not in value:
-                print('Invalid Login detais')
-
-    # if change password if forgotten
-    elif prompt == 'forgotten':
-        username = input('Enter Username: ')
-        # check if username exist, if yes, map a new password to it 
-        for key in storage:
-            if username in key:
-                password = input('Enter new password: ')
-                y = passwordChecker(password)
-                if y == True:
-                    storage[username] = password
-                    # print(storage)
-                    break
-                else:
-                    print('Password doesn\'t meet the requirements.')
-        # if username not found
-        else:
-            print('Username not found.')
-            
-    # if user input unknown
+def signUp ():
+    username = input('Enter username: ')
+    validUsername = usernameChecker(username)
+    password = input('Enter password: ')
+    validPassword = passwordChecker(password)
+    # what can go wrong?
+    # username exist?
+    if username in storage:
+        print('Username Exist')
+        return False
+    # bad username?
+    elif validUsername == False and validPassword:
+        print('Username doesn\'t meet the requirements.')
+        return False
+    # bad password?
+    elif validUsername and validPassword == False:
+        print('Password doesn\'t meet the requirements.')
+        return False
+    # bad username & password
+    elif validUsername == False and validPassword == False:
+        print('Password and Username doesn\'t meet the requirements.')
+        return False
+    # all good sign up
     else:
-        print('''
-Enter 'sign up' to open a new account
-Enter 'login' to access dashboard
-Enter 'forgotten' if password can't be remembered
-''')
+        storage[username] = password
+        print('Information saved!')
+        return True
+
+def signIn ():
+    username = input('Enter username: ')
+    password = input('Enter password: ')
+    # what can go wrong?
+    # bad username?
+    if username not in storage:
+        print('Username Incorrect')
+        return False
+    # bad password?
+    elif storage[username] != password:
+        print('Password Incorrect')
+        return False
+    # both ok?
+    elif username in storage and storage[username] == password:
+        print('Access Granted')
+        return True
+    # both invalid?
+    else:
+        print('Invalid details')
+        return False
+        
+def changePassword ():
+    username = input('Enter username: ')
+    validUsername = usernameChecker(username)
+    # what can go wrong?
+    # bad username?
+    if validUsername == False:
+        print('Username doesn\'t meet the requirements.')
+        return False
+    # registered?
+    elif username in storage:
+        print('User Found!')
+        password = input('Enter new password: ')
+        validPassword = passwordChecker
+        if validPassword == False:
+            storage[username] = password
+            print("New password for " + username + " is " + password)
+            return True
+        else:
+            print('Password doesn\'t meet the requirements.')
+            return False
+        
+def __init__ ():
+  print(
+    "HINT::: \n" +
+    "Enter 'sign up' to open a new account \n" +
+    "Enter 'login' to access dashboard \n" +
+    "Enter 'forgotten' if password can't be remembered \n"
+  )
+  action = input("\nEnter startup action: ")
+  if action == "sign up":
+    signingUp = signUp()
+    if signingUp:
+      print("\nSign up successful\n")
+      __init__()
+    else:
+      print("\nSign up came back with one or more error(s)\n")
+      restart = input("\nDo you want to try again? ")
+      if "yes" in restart or "y" in restart:
+        __init__()
+      else:
+        print("Thanks for using this program\nSee you some other time")
+        quit()
+  if action == "login":
+    signingIn = signIn()
+    if signingIn:
+      print("\nSign in successful\n")
+      __init__()
+    else:
+      print("\nSign in came back with one or more error(s)\n")
+      restart = input("\nDo you want to try again? ")
+      if "yes" in restart or "y" in restart:
+        __init__()
+      else:
+        print("Thanks for using this program\nSee you some other time")
+        quit()
+  if action == "forgotten":
+    changingPassword = changePassword()
+    if changingPassword:
+      print("\nPassword Changed successfully\n")
+      __init__()
+    else:
+      print("\nOne or more error(s) prevented password change\n")
+      restart = input("\nDo you want to try again? ")
+      if "yes" in restart or "y" in restart:
+        __init__()
+      else:
+        print("Thanks for using this program\nSee you some other time")
+        quit()
+
+__init__()
