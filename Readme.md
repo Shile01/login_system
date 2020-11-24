@@ -1,5 +1,5 @@
 # Login system using python.
-This is a simple command line Login system I wrote to practice more on using loops and dictionaries among others.
+This is a simple command line Login system I wrote to practice more on using loops and dictionaries, regex among others.
 
 ## Requirements
 - Python3.x
@@ -22,4 +22,4 @@ Each entry has its own requirements binding it such as;
 1. Username must have at least a capital letter.
 2. Password must be more than or equals to 8 characters consisting of letters, numbers and signs.
 3. For signing up: No information is saved if the requirements aren't fulfilled.
-4. Once the terminal is closed, all Changes are lost :s
+4. Once the terminal is closed, all Changes are lost 😔
