@@ -83,8 +83,8 @@ def changePassword ():
     elif username in storage:
         print('User Found!')
         password = input('Enter new password: ')
-        validPassword = passwordChecker
-        if validPassword == False:
+        validPassword = passwordChecker(password) 
+        if validPassword == True:
             storage[username] = password
             print("New password for " + username + " is " + password)
             return True
